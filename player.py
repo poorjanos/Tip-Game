@@ -6,5 +6,6 @@ class Player:
         assert isinstance(player_name, str), 'Player name must be character'
         self.player_name = player_name
         self.tip_history = {}
-        self.score = {}
 
+    def get_score(self):
+         return sum(self.tip_history.values())

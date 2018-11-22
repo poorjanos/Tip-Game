@@ -1,4 +1,5 @@
 import player
+from Utils.data_manipulation import score_tuples
 
 class TipGame:
     '''
@@ -9,6 +10,7 @@ class TipGame:
         self.players = {}
         self.tour = tour
         self.tips = {}
+        self.results = {}
 
      
     def add_player(self, player_name):
@@ -51,30 +53,27 @@ class TipGame:
          '''
          try:
               tips_made = self.tips[match]
-             
+              if match in self.results:
+                   raise ValueError
+              
+              self.results[match] = result 
+               
+              for player_name in tips_made.keys():
+                   player_tip = tips_made[player_name]
+                   score = score_tuples(player_tip, result)
+                   
+                   self.players[player_name].tip_history[match] = score
+         
          except KeyError:
               print 'No tips exist for match!'
+         
+         except ValueError:
+              print 'Match already scored!'
+
+           
+         
              
-         for player_name in tips_made.keys():
-              player_tip = tips_made[player_name]
-             
-              # Player tipped exact result 
-              if player_tip == result:
-                   score = 3
-              # Player did not tip exact result      
-              else:
-                   tip_diff = player_tip[0] - player_tip[1]
-                   result_diff = result[0] - result[1]
-                  
-                   # Player tipped draw right  
-                   if tip_diff == 0 and result_diff == 0:    
-                        score = 1 
-                   # Player tipped winner right     
-                   elif tip_diff*1/abs(tip_diff) == result_diff*1/abs(result_diff):
-                        score = 1
-                   # Player tipped wrong
-                   else:     
-                        score = 0
+              
                
              
              

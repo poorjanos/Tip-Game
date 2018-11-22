@@ -21,4 +21,16 @@ g.add_player('Matyi')
 g.make_tip('Jancsi', ('GroupD1', 'Argentina', 'Iceland'), (1,1))
 g.make_tip('Matyi', ('GroupD1', 'Argentina', 'Iceland'), (4,0))
 g.make_tip('Jancsi', ('GroupA1', 'Egypt', 'Saudi-Arabia'), (3,1))
-g.make_tip('matyi', ('Argentina', 'Iceland'), (2,2))
+g.make_tip('Matyi', ('GroupA1', 'Egypt', 'Saudi-Arabia'), (2,1))
+
+# Update scores
+g.update_scores(('GroupD1', 'Argentina', 'Iceland'), (2, 1))
+g.update_scores(('GroupA1', 'Egypt', 'Saudi-Arabia'), (2, 1))
+
+# Check scores
+g.results
+g.players['Jancsi'].tip_history
+g.players['Matyi'].tip_history
+g.players['Jancsi'].get_score()
+g.players['Matyi'].get_score()
+
