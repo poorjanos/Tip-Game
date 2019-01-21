@@ -53,7 +53,7 @@ class TipGame:
         self.players = {}
         self.tour = tour
         self.tips = {}
-        self.results = {}
+        #self.results = {}
 
      
     def add_player(self, player_name):
@@ -101,10 +101,10 @@ class TipGame:
          except KeyError:
               raise NoTipsForMatch(match)
               
-         if match in self.results:
+         if match in self.tour.results:
               raise MatchAlreadyScored(match)
          
-         self.results[match] = result 
+         self.tour.results[match] = result 
           
          for player_name in tips_made.keys():
               tip = tips_made[player_name]

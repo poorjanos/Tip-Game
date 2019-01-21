@@ -9,6 +9,7 @@ class Tournament:
         assert isinstance(groups, dict), 'Groups must be dictionary'
         self.groups = groups
         self.matches = self.gen_matches(self.groups)
+        self.results = {}
 
 
     def gen_matches(self, groups):
