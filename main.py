@@ -29,7 +29,7 @@ fifa2018_match_dates = {
  'GroupC4': datetime.datetime(2018, 7, 10, 16, 0),
  'GroupC5': datetime.datetime(2018, 7, 11, 16, 0),
  'GroupD0': datetime.datetime(2018, 6, 24, 16, 0),
- 'GroupD1': datetime.datetime(2018, 6, 25, 16, 0),
+ 'GroupD1': datetime.datetime(2019, 6, 25, 16, 0),
  'GroupD2': datetime.datetime(2018, 6, 26, 16, 0),
  'GroupD3': datetime.datetime(2018, 6, 27, 16, 0),
  'GroupD4': datetime.datetime(2018, 6, 28, 16, 0),
@@ -56,6 +56,7 @@ class Editor():
      def __init__(self):
           self.menu_map = {
                     "tip": self.tip,
+                    "change_tip": self.alter_tip,
                     "score": self.score,
                     "quit": self.quit
                     }
@@ -80,11 +81,56 @@ class Editor():
                except tipgame.MatchNotInTournament:
                     print "This match is not part of tournament!"
                     return
+               except tipgame.MatchAlreadyPlayed:
+                    print "This match has already been played, no tips accepted!"
+                    return
                except tipgame.PlayerAlreadyMadeTip:
                     print "This player already made tip for this match!"
                     return
+               except tipgame.PlayerMadeNoTip:
+                    print "This player has not yet made tip for this match!"
+                    return
+               except tipgame.TipAlreadyMade:
+                    print "This player has made same tip for this match before, no changes made!"
+                    return
                else:
                     print "Tip successful: {} has tipped {} for {}".format(player_name, tip, match)
+     
+     
+     def alter_tip(self):
+          '''
+          Register and store tips from user input
+          '''
+          done = False
+          while not done:
+               # Ask for user input
+               player_name = raw_input("Player: ")
+               match = tuple(raw_input("Match (group and teams separated by comma): ").strip().split(","))
+               tip = tuple([int(i) for i in raw_input("Tip (result separeted by comma): ").strip().split(",")])
+               
+               try:
+                    game.make_tip(player_name, match, tip, alter = True)
+                    done = True
+               except tipgame.PlayerNotExists:
+                    print "This player does not participate in game!"
+                    return
+               except tipgame.MatchNotInTournament:
+                    print "This match is not part of tournament!"
+                    return
+               except tipgame.MatchAlreadyPlayed:
+                    print "This match has already been played, no tips accepted!"
+                    return
+               except tipgame.PlayerAlreadyMadeTip:
+                    print "This player already made tip for this match!"
+                    return
+               except tipgame.PlayerMadeNoTip:
+                    print "This player has not yet made tip for this match!"
+                    return
+               except tipgame.TipAlreadyMade:
+                    print "This player has made same tip for this match before, no changes made!"
+                    return
+               else:
+                    print "Tip successfully changed: {} has tipped {} for {}".format(player_name, tip, match)
      
      
      def score(self):
@@ -132,6 +178,7 @@ class Editor():
                     '''
 Please enter a command:   
 \ttip\tTo make a tip
+\tchange\tTo modify a tip
 \tscore\tTo score a match
 \tquit\tTo quit game
                     ''')

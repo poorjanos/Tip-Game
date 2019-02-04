@@ -1,4 +1,5 @@
 import player
+import datetime
 from Utils.data_manipulation import score_match
 
 
@@ -30,6 +31,13 @@ class PlayerAlreadyMadeTip(Exception):
      pass
 
 
+class PlayerMadeNoTip(Exception):
+     '''
+     Custom exception to handle player already made tip error
+     '''
+     pass
+
+
 class NoTipsForMatch(Exception):
      '''
      Custom exception to handle no tips for match error
@@ -42,6 +50,22 @@ class MatchAlreadyScored(Exception):
      Custom exception to handle match already scored error
      '''
      pass
+
+
+class MatchAlreadyPlayed(Exception):
+     '''
+     Custom exception to handle match already played error
+     '''
+     pass
+
+
+class TipAlreadyMade(Exception):
+     '''
+     Custom exception to handle error when attempting to alter tip with same tip 
+     '''
+     pass
+
+
 
 
 class TipGame:
@@ -63,9 +87,9 @@ class TipGame:
               self.players[player_name] = player.Player(player_name)
          
      
-    def make_tip(self, player_name, match, tip):
+    def make_tip(self, player_name, match, tip, alter = False):
          '''
-         Make tip for player for given match
+         Make original tip for given match or alter already existing tip of player
          '''
          try:
               # Check if player exists
@@ -76,18 +100,34 @@ class TipGame:
          # Check if match is part of tournament
          if match not in self.tour.get_matches():
               raise MatchNotInTournament(match)     
-              
-                      
-         if match not in self.tips:
-              self.tips[match] = {player.player_name: tip}
-         # Check if player already made tip for match
-         elif player_name in self.tips[match].keys():
-              raise PlayerAlreadyMadeTip(player_name, match)
+         
+         # Check if match has been played
+         if self.tour.match_dates[match[0]] < datetime.datetime.now():
+              raise MatchAlreadyPlayed(match)    
+         
+         if not alter:
+              # Make original tip
+              if match not in self.tips:
+                   self.tips[match] = {player.player_name: tip}
+              # Check if player already made tip for match
+              elif player_name in self.tips[match].keys():
+                   raise PlayerAlreadyMadeTip(player_name, match)
+              else:
+                   self.tips[match].update({player.player_name: tip})
          else:
-              self.tips[match].update({player.player_name: tip})
-                                  
-              
-              
+              # Alter tip 
+              if match not in self.tips:
+                   raise NoTipsForMatch(match)
+              # Check if player already made tip for match     
+              elif not player_name in self.tips[match].keys():
+                   raise PlayerMadeNoTip(match)
+              # Check if original tip is different from new tip     
+              elif self.tips[match][player_name] == tip:
+                   raise TipAlreadyMade(match)
+              else:
+                   self.tips[match].update({player.player_name: tip})
+    
+    
     def update_scores(self, match, result):
          '''
          Update player score and history based on match result
