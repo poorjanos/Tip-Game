@@ -109,11 +109,13 @@ class TipGame:
               # Make original tip
               if match not in self.tips:
                    self.tips[match] = {player.player_name: tip}
+                   self.players[player_name].tip_history[match] = [(tip, datetime.datetime.now())]
               # Check if player already made tip for match
               elif player_name in self.tips[match].keys():
                    raise PlayerAlreadyMadeTip(player_name, match)
               else:
                    self.tips[match].update({player.player_name: tip})
+                   self.players[player_name].tip_history[match] = [(tip, datetime.datetime.now())]
          else:
               # Alter tip 
               if match not in self.tips:
@@ -126,6 +128,7 @@ class TipGame:
                    raise TipAlreadyMade(match)
               else:
                    self.tips[match].update({player.player_name: tip})
+                   self.players[player_name].tip_history[match].append((tip, datetime.datetime.now()))
     
     
     def update_scores(self, match, result):
@@ -150,8 +153,16 @@ class TipGame:
               tip = tips_made[player_name]
               score = score_match(tip, result)
               
-              self.players[player_name].tip_history[match] = score
+              self.players[player_name].score_history[match] = score
          
      
-    def get_results(self):
-        pass
+    def get_leaderboard(self, player_name = 'all'):
+        if player_name == 'all':
+             return sorted([(key, value.get_score()) for key, value in self.players.iteritems()], key = lambda x: x[1], reverse = True)
+        else:
+             try:
+                  return (self.players[player_name].player_name, self.players[player_name].get_score())
+             except KeyError:
+                  raise PlayerNotExists(player_name)
+         
+         

@@ -30,7 +30,7 @@ fifa2018_match_dates = {
  'GroupC4': datetime.datetime(2018, 7, 10, 16, 0),
  'GroupC5': datetime.datetime(2018, 7, 11, 16, 0),
  'GroupD0': datetime.datetime(2018, 6, 24, 16, 0),
- 'GroupD1': datetime.datetime(2018, 6, 25, 16, 0),
+ 'GroupD1': datetime.datetime(2019, 6, 25, 16, 0),
  'GroupD2': datetime.datetime(2018, 6, 26, 16, 0),
  'GroupD3': datetime.datetime(2018, 6, 27, 16, 0),
  'GroupD4': datetime.datetime(2018, 6, 28, 16, 0),

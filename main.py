@@ -56,8 +56,10 @@ class Editor():
      def __init__(self):
           self.menu_map = {
                     "tip": self.tip,
-                    "change_tip": self.alter_tip,
+                    "change": self.alter_tip,
                     "score": self.score,
+                    "show": self.show_tips,
+                    "leaderboard": self.show_leaderboard,
                     "quit": self.quit
                     }
      
@@ -126,6 +128,9 @@ class Editor():
                except tipgame.PlayerMadeNoTip:
                     print "This player has not yet made tip for this match!"
                     return
+               except tipgame.NoTipsForMatch:
+                    print "No tips made for this match yet!"
+                    return
                except tipgame.TipAlreadyMade:
                     print "This player has made same tip for this match before, no changes made!"
                     return
@@ -159,6 +164,28 @@ class Editor():
                     print "Game updated successfully: {} resulted in {}".format(match, result) 
      
      
+     def show_tips(self):
+          '''
+          Display tips already made
+          '''
+          print(game.tips)
+          
+     
+     def show_leaderboard(self):
+          '''
+          Display current descending ranks on leaderboard
+          '''
+          done = False
+          while not done:
+               player_to_show = raw_input("Please enter player name or 'all' for total ranking: ").strip()
+               try:
+                    print(game.get_leaderboard(player_name = player_to_show))
+                    done = True
+               except tipgame.PlayerNotExists:
+                    print "Wrong input: this player does not participate in game!"
+                    return
+     
+     
      def quit(self):
           '''
           Exit user facing CLI interface
@@ -180,6 +207,8 @@ Please enter a command:
 \ttip\tTo make a tip
 \tchange\tTo modify a tip
 \tscore\tTo score a match
+\tshow\tTo show tips
+\tleaderboard\t To show leaderboard
 \tquit\tTo quit game
                     ''')
                     
